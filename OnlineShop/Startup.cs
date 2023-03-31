@@ -2,11 +2,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using OnlineShop.Interfaces;
+using OnlineShop.Models;
+using OnlineShop.Repositories;
+using OnlineShop.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +31,15 @@ namespace OnlineShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<OnlineShopContext>(
+                    option => option.UseSqlServer(
+                        "Server=DESKTOP-QTN9LC5;Database=OnlineShop;Integrated Security=true"));
+            // Add the memory cache services
+            services.AddMemoryCache();
+
+            // Add a custom scoped service
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

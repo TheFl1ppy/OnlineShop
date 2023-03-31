@@ -49,26 +49,14 @@ namespace OnlineShop
     {
         public static void Main(string[] args)
         {
-            void Configure(IApplicationBuilder app, IServiceCollection services)
-            {
-                app.UseDefaultFiles();
-                services.AddDbContext<OnlineShopContext>(
-                        option => option.UseSqlServer(
-                            "Server=DESKTOP-QTN9LC5;Database=OnlineShop;Integrated Security=true"));
-                // Add the memory cache services
-                services.AddMemoryCache();
-
-                // Add a custom scoped service
-                services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-                services.AddScoped<IUserRepository, UserRepository>();
-            }
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();   
+                    webBuilder.UseStartup<Startup>();
                 });
     }
-}
+}   
